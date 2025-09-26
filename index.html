@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Control de Accesos — v1.3.5</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- LOGIN -->
+  <div id="loginView">
+    <h1>🔐 Ingresar</h1>
+    <label>Usuario</label>
+    <input type="text" id="loginUser" placeholder="admin o guardia" />
+    <label>Contraseña</label>
+    <input type="password" id="loginPass" placeholder="••••" />
+    <button onclick="doLogin()">Entrar</button>
+    <p>Usuarios demo: admin/1234 · guardia/0000</p>
+  </div>
+
+  <!-- APP -->
+  <div id="appView" style="display:none">
+    <header>
+      <h2>📋 Control de Accesos v1.3.5</h2>
+      <div>
+        Usuario: <span id="hdrUser">-</span> · Rol: <span id="hdrRol">-</span>
+        <button onclick="logout()">Salir</button>
+      </div>
+    </header>
+
+    <nav id="tabs">
+  <button class="tabbtn active" data-target="ingreso">Ingreso LD</button>
+  <button class="tabbtn" data-target="auditoria">Auditoría LD</button>
+  <button class="tabbtn" data-target="materia">Materia Prima</button>
+  <button class="tabbtn" data-target="preventa">Auditoría Preventa</button>
+  <button class="tabbtn" data-target="programacion">Programación Preventa</button> <!-- 👈 NUEVO -->
+  <button class="tabbtn" data-target="liberacion">Liberación Preventa</button>
+  <!-- ⚙️ Configuración aparece solo si es admin -->
+ </nav>
+
+    <!-- ====== SECCIONES ====== -->
+
+    <!-- Ingreso LD -->
+    <section id="ingreso" class="section active">
+      <h3>🚛 Ingreso de Larga Distancia</h3>
+      <form id="formIngreso">
+        <input type="text" id="movilIngreso" placeholder="N° Camión" />
+        <input type="text" id="choferIngreso" placeholder="Chofer" />
+        <input type="text" id="cedulaIngreso" placeholder="Cédula" />
+        <input type="text" id="matriculaIngreso" placeholder="Matrícula" />
+        <input type="text" id="destinoIngreso" placeholder="Destino" />
+        <select id="estadoIngreso">
+          <option>Cargado</option>
+          <option>Vacío</option>
+        </select>
+        <button type="button" onclick="guardarIngreso()">Guardar</button>
+      </form>
+      <table id="tablaIngreso">
+        <thead>
+          <tr><th>N°</th><th>Chofer</th><th>Cédula</th><th>Matrícula</th><th>Destino</th><th>Estado</th><th>Hora</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <!-- Auditoría LD -->
+    <section id="auditoria" class="section">
+      <h3>📝 Auditoría de Larga Distancia</h3>
+      <form id="formAuditoria">
+        <input type="text" id="movilAud" placeholder="N° Camión" />
+        <input type="text" id="choferAud" placeholder="Chofer" />
+        <input type="text" id="cedulaAud" placeholder="Cédula" />
+        <input type="text" id="matriculaAud" placeholder="Matrícula" />
+        <input type="text" id="idCargaAud" placeholder="ID Carga (7 dígitos)" />
+        <input type="text" id="destinoAud" placeholder="Destino" />
+        <select id="tipoCargaAud">
+          <option>Transferencia</option>
+          <option>Ancla</option>
+        </select>
+        <input type="text" id="satAud" placeholder="Saturno" oninput="autoGuardia('satAud','guardiaAud')" />
+        <input type="text" id="guardiaAud" placeholder="Guardia" readonly />
+        <input type="time" id="horaAud" />
+        <select id="tipoAud">
+          <option>Total</option>
+          <option>Parcial</option>
+          <option>Dirigida</option>
+        </select>
+        <textarea id="obsAud" placeholder="Observación"></textarea>
+        <button type="button" onclick="guardarAuditoria()">Guardar</button>
+      </form>
+      <table id="tablaAuditoria">
+        <thead>
+          <tr><th>N°</th><th>Chofer</th><th>Cédula</th><th>Matrícula</th><th>ID Carga</th><th>Destino</th><th>Tipo Carga</th><th>Saturno</th><th>Guardia</th><th>Hora</th><th>Tipo Auditoría</th><th>Observación</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <!-- Materia Prima -->
+    <section id="materia" class="section">
+      <h3>🌾 Materia Prima</h3>
+      <form id="formMateria">
+        <input type="text" id="matMP" placeholder="Matrícula" />
+        <input type="text" id="empresaMP" placeholder="Empresa" />
+        <input type="text" id="choferMP" placeholder="Chofer" />
+        <input type="text" id="productoMP" placeholder="Producto" />
+        <input type="number" id="cantMP" placeholder="Cantidad" />
+        <input type="text" id="satMP" placeholder="Saturno" oninput="autoGuardia('satMP','guardiaMP')" />
+        <input type="text" id="guardiaMP" placeholder="Guardia" readonly />
+        <button type="button" onclick="guardarMateria()">Guardar</button>
+      </form>
+      <table id="tablaMateria">
+        <thead>
+          <tr><th>Matrícula</th><th>Empresa</th><th>Chofer</th><th>Producto</th><th>Cantidad</th><th>Saturno</th><th>Guardia</th><th>Hora Entrada</th><th>Hora Salida</th><th>Acción</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <!-- Auditoría Preventa -->
+    <section id="preventa" class="section">
+      <h3>📦 Auditoría Preventa</h3>
+      <form id="formPreventa">
+        <input type="time" id="horaPrev" />
+        <input type="text" id="cargaPrev" placeholder="Carga" />
+        <input type="text" id="idCargoPrev" placeholder="ID Cargo (7 dígitos)" />
+        <input type="number" id="potsPrev" placeholder="Número de Pots (opcional)" />
+        <select id="turnoPrev"><option>Diurno</option><option>Nocturno</option></select>
+        <input type="text" id="satPrev" placeholder="Saturno" oninput="autoGuardia('satPrev','guardiaPrev')" />
+        <input type="text" id="guardiaPrev" placeholder="Guardia" readonly />
+        <select id="tipoPrev"><option>Total</option><option>Parcial</option><option>Dirigida</option></select>
+        <textarea id="obsPrev" placeholder="Observación (opcional)"></textarea>
+        <button type="button" onclick="guardarPreventa()">Guardar</button>
+      </form>
+      <table id="tablaPreventa">
+  <thead>
+    <tr>
+      <th>Hora</th>
+      <th>Carga</th>
+      <th>ID Cargo</th>
+      <th>Pots</th>
+      <th>Turno</th>
+      <th>Saturno</th>
+      <th>Guardia</th>
+      <th>Tipo Auditoría</th>
+      <th>Observación</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+    </section>
+
+    <!-- Programación Preventa -->
+<section id="programacion" class="section">
+  <h3>📅 Programación de Auditoría Preventa</h3>
+  <form id="formProg">
+    <label>Fecha de programación:</label>
+    <input type="date" id="fechaProg" required />
+    <br>
+    <label>Total programado:</label>
+    <input type="number" id="totalProg" placeholder="Cantidad total" required />
+    <br>
+    <label>Cargas programadas:</label>
+    <textarea id="cargasProg" placeholder="Ej: 3001,3002,3003..." required></textarea>
+    <br>
+    <button type="button" onclick="guardarProgramacion()">Guardar Programación</button>
+  </form>
+
+  <h4>📋 Programaciones cargadas</h4>
+  <table id="tablaProg">
+  <table id="tablaProg">
+  <thead>
+    <tr>
+      <th>Fecha</th>
+      <th>Carga</th>
+      <th>ID Cargo</th>
+      <th>Hora Auditoría</th>
+      <th>Guardia Auditor</th>
+      <th>Estado Auditoría</th>
+      <th>Hora Liberación</th>
+      <th>Guardia Liberador</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+</section>
+
+  <!-- Liberación Preventa -->
+<section id="liberacion" class="section">
+  <h3>🔓 Liberación Preventa</h3>
+  
+  <label>Buscar por N° de Carga o ID Cargo:</label>
+  <input type="text" id="buscarLib" placeholder="Ej: 4001 o 1234567" />
+  <button type="button" onclick="buscarLiberacion()">Buscar</button>
+
+  <div id="resultadoLiberacion"></div>
+
+  <!-- Campo para Saturno -->
+  <div id="saturnoLiberacion" style="display:none; margin-top:10px;">
+    <label>Saturno:</label>
+    <input type="text" id="saturnoInput" placeholder="Ingrese Saturno" />
+    <button type="button" onclick="confirmarLiberacion()">Confirmar Liberación</button>
+  </div>
+
+  <h4>📋 Historial de Liberaciones</h4>
+  <table id="tablaLiberacion">
+    <thead>
+      <tr>
+        <th>Hora</th>
+        <th>Carga</th>
+        <th>ID Cargo</th>
+        <th>Guardia</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</section>
+
+    <!-- Configuración -->
+<section id="config" class="section">
+  <h3>⚙️ Configuración</h3>
+  <button onclick="abrirConfig('choferes')">Choferes</button>
+  <button onclick="abrirConfig('guardias')">Guardias</button>
+  <button onclick="abrirConfig('materia')">Materia Prima</button>
+  <button onclick="abrirConfig('informes')">Informes</button>
+  <button onclick="abrirConfig('historiales')">Historiales</button> <!-- 👈 NUEVO -->
+  <div id="configContent"></div>
+</section>
+  </div>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
