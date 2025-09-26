@@ -1,0 +1,137 @@
+/* ====== ESTILOS GENERALES ====== */
+:root {
+  --bg:#f4f6f9;
+  --card:#fff;
+  --text:#1f2937;
+  --muted:#6b7280;
+  --border:#e5e7eb;
+  --primary:#2563eb;
+  --ok:#16a34a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* ====== LOGIN ====== */
+#loginView {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+#loginView h1 {
+  color: var(--primary);
+}
+
+#loginView input {
+  display: block;
+  width: 100%;
+  margin: 8px 0;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+#loginView button {
+  margin-top: 10px;
+  background: var(--primary);
+  color: #fff;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* ====== APP HEADER ====== */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--primary);
+  color: #fff;
+  padding: 12px 16px;
+}
+
+/* ====== NAV ====== */
+nav#tabs {
+  display: flex;
+  gap: 8px;
+  padding: 10px;
+  background: #eaf0ff;
+  border-bottom: 1px solid var(--border);
+}
+
+.tabbtn {
+  background: #dbe5ff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.tabbtn.active {
+  background: var(--primary);
+  color: #fff;
+}
+
+/* ====== SECCIONES ====== */
+.section {
+  display: none;
+  background: var(--card);
+  margin: 16px auto;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  max-width: 1000px;
+}
+
+.section.active {
+  display: block;
+}
+
+form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+form input, form select, form button {
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+form button {
+  background: var(--ok);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* ====== TABLAS ====== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+}
+
+th, td {
+  padding: 8px;
+  border: 1px solid var(--border);
+}
+
+th {
+  background: #f3f4f6;
+}
